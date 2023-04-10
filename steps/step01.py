@@ -7,3 +7,6 @@ import numpy as np
 data = np.array(1.0)
 x = Variable(data)
 print(x.data)
+
+x.data = np.array(2.0)
+print(x.data)
