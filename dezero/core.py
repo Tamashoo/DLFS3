@@ -250,6 +250,7 @@ def pow(x, c):
 
 class Config:
     enable_backprop = True
+    train = True
 
 @contextlib.contextmanager
 def using_config(name, value):
@@ -259,6 +260,9 @@ def using_config(name, value):
         yield
     finally:
         setattr(Config, name, old_value)
+
+def test_mode():
+    return using_config('train', False)
 
 class Parameter(Variable):
     pass
