@@ -1,7 +1,7 @@
 import numpy as np
 import dezero
 from dezero import utils
-from dezero.core import Function, as_variable
+from dezero.core import Function, Variable, as_variable, as_array
 
 
 class Sin(Function):
@@ -124,7 +124,8 @@ class GetItemGrad(Function):
         self.in_shape = in_shape
 
     def forward(self, gy):
-        xp = dezero.cuda.get_array_module(gy)
+        #xp = dezero.cuda.get_array_module(gy)
+        xp = np
         gx = xp.zeros(self.in_shape, dtype=gy.dtype)
 
         if xp is np:
@@ -271,6 +272,20 @@ class Sigmoid(Function):
 def sigmoid(x):
     return Sigmoid()(x)
 
+class ReLU(Function):
+    def forward(self, x):
+        y = np.maximum(x, 0.0)
+        return y
+    
+    def backward(self, gy):
+        x, = self.inputs
+        mask = x.data > 0
+        gx = gy * mask
+        return gx
+    
+def relu(x):
+    return ReLU()(x)
+
 def softmax_simple(x, axis=1):
     x = as_variable(x)
     y = exp(x)
@@ -374,3 +389,10 @@ class Clip(Function):
 
 def clip(x, x_min, x_max):
     return Clip(x_min, x_max)(x)
+
+def accuracy(y, t):
+    y, t = as_variable(y), as_variable(t)
+    pred = y.data.argmax(axis=1).reshape(t.shape)
+    result = pred == t.data
+    acc = result.mean()
+    return Variable(as_array(acc))
