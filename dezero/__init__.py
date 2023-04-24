@@ -24,11 +24,8 @@ else:
     from dezero.models import Model
     from dezero.datasets import Dataset
     from dezero.dataloaders import DataLoader
-    """
     from dezero.dataloaders import SeqDataLoader
 
-    import dezero.functions_conv
-    """
     import dezero.dataloaders
     import dezero.utils
     import dezero.layers
@@ -36,6 +33,7 @@ else:
     import dezero.cuda
     import dezero.transforms
     import dezero.optimizers
+    import dezero.functions_conv
 
 setup_variable()
 __version__ = '0.0.13'
